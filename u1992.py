@@ -5,7 +5,7 @@ Created on Mon Apr  4 12:44:50 2022
 @author: USER
 """
 
-def uklad_1992(fi,lam,a,e2):
+def u1992(fi,lam,a,e2):
     m_0 = 0.9993
     N = a/(m.sqrt(1-e2 * np.sin(fi)**2))
     t = np.tan(fi)

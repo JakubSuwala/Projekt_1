@@ -1,4 +1,6 @@
 from math import sin, cos, sqrt, atan, atan2, degrees, radians
+import math
+import numpy as np
 
 class Transformacje:
     def __init__(self, model: str = "wgs84"):
@@ -52,7 +54,7 @@ class Transformacje:
             dms - degree, minutes, sec
         """
         r   = sqrt(X**2 + Y**2)           # promień
-        lat_prev = atan(Z / (r * (1 - self.ecc2)))    # pierwsze przybliilizenie
+        lat_prev = atan(Z / (r * (1 - self.ecc2)))    # pierwsze przyblizenie
         lat = 0
         while abs(lat_prev - lat) > 0.000001/206265:    
             lat_prev = lat
@@ -71,7 +73,15 @@ class Transformacje:
         else:
             raise NotImplementedError(f"{output} - output format not defined")
             
-
+            
+        def filamh2XYZ(self, fi, lam, h):
+            fi = math.radians(fi)
+            lam = math.radians(lam)
+            N = self.a / math.sqrt(1 - self.ecc2 * math.sin(fi)**2)
+            X = (N + h) * math.cos(fi) * math.cos(lam)
+            Y = (N + h) * math.cos(fi) * math.sin(lam)
+            Z = (N * (1 - self.ecc2) + h) * math.sin(fi)
+            return(X, Y, Z)
 
 
 if __name__ == "__main__":
@@ -81,7 +91,8 @@ if __name__ == "__main__":
     X = 3664940.500; Y = 1409153.590; Z = 5009571.170
     phi, lam, h = geo.xyz2plh(X, Y, Z)
     print(phi, lam, h)
-    phi, lam, h = geo.xyz2plh2(X, Y, Z)
-    print(phi, lam, h)
+    
+    X, Y, Z = geo.filamh2XYZ(phi, lam, h)
+    print(X, Y, Z)
         
     
